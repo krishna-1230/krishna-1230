@@ -1,6 +1,6 @@
-<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- ─────────────────────────────────────────────────────────────────────── -->
 <!--                    KRISHNA GOPAL V.S  ::  README.md                     -->
-<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- ─────────────────────────────────────────────────────────────────────── -->
 
 <p align="center">
   <img src="https://capsule-render.vercel.app/api?type=waving&color=0:0f0c29,50:302b63,100:24c6dc&height=220&section=header&text=Krishna%20Gopal%20V.S&fontSize=58&fontColor=ffffff&animation=fadeIn&fontAlignY=36&desc=Full-Stack%20AI%20Engineer%20%E2%80%A2%20Agentic%20Systems%20%E2%80%A2%20LLM%20Apps&descAlignY=58&descSize=18" width="100%"/>
@@ -18,22 +18,7 @@
   <img src="https://img.shields.io/badge/focus-Agentic%20AI-24c6dc?style=flat-square" alt="focus"/>
 </p>
 
-```text
-    ██╗  ██╗██████╗ ██╗███████╗██╗  ██╗███╗   ██╗ █████╗
-    ██║ ██╔╝██╔══██╗██║██╔════╝██║  ██║████╗  ██║██╔══██╗
-    █████╔╝ ██████╔╝██║███████╗███████║██╔██╗ ██║███████║
-    ██╔═██╗ ██╔══██╗██║╚════██║██╔══██║██║╚██╗██║██╔══██║
-    ██║  ██╗██║  ██║██║███████║██║  ██║██║ ╚████║██║  ██║
-    ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝
-          ██████╗  ██████╗ ██████╗  █████╗ ██╗
-         ██╔════╝ ██╔═══██╗██╔══██╗██╔══██╗██║
-         ██║  ███╗██║   ██║██████╔╝███████║██║
-         ██║   ██║██║   ██║██╔═══╝ ██╔══██║██║
-         ╚██████╔╝╚██████╔╝██║     ██║  ██║███████╗
-          ╚═════╝  ╚═════╝ ╚═╝     ╚═╝  ╚═╝╚══════╝
-    ───────────────────────────────────────────────────────
-     agents that think  ·  pipelines that route  ·  apps that ship
-```
+<p align="center"><i>agents that think · pipelines that route · apps that ship</i></p>
 
 ## `$ neofetch`
 
@@ -220,11 +205,11 @@ Custom dataset + **fine-tuned Llama** that acts as a first-line Linux tech-suppo
 ## `$ cat /etc/certs`
 
 ```text
- ╔══════════════════════════════════════════════════════════════════╗
- ║  [x]  AI-900  ·  Microsoft Azure AI Fundamentals                 ║
- ║  [x]  OCI 2025 Certified AI Foundations Associate                ║
- ║  [x]  OCI 2025 Certified Generative AI Professional              ║
- ╚══════════════════════════════════════════════════════════════════╝
+ ┌──────────────────────────────────────────────────────────────────┐
+ │  [x]  AI-900  ·  Microsoft Azure AI Fundamentals                 │
+ │  [x]  OCI 2025 Certified AI Foundations Associate                │
+ │  [x]  OCI 2025 Certified Generative AI Professional              │
+ └──────────────────────────────────────────────────────────────────┘
 ```
 
 <br/>
@@ -235,6 +220,50 @@ Custom dataset + **fine-tuned Llama** that acts as a first-line Linux tech-suppo
   <img src="https://streak-stats.demolab.com?user=krishna-1230&theme=tokyonight&hide_border=true&background=0D1117&ring=24C6DC&fire=24C6DC&currStreakLabel=24C6DC" alt="GitHub streak"/>
 </p>
 
+<br/>
+
+## `$ ./arcade --insert-coin`
+
+```text
+  ┌─────────────────────────────────────────────────────────────┐
+  │  > INSERT COIN ......................... [ 1UP ]            │
+  │  > every green square is a real contribution,               │
+  │  > and every game below eats them.                          │
+  └─────────────────────────────────────────────────────────────┘
+```
+
+<p align="center"><b>👾 PAC-MAN</b></p>
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/krishna-1230/krishna-1230/output/pacman-contribution-graph-dark.svg"/>
+    <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/krishna-1230/krishna-1230/output/pacman-contribution-graph.svg"/>
+    <img alt="pac-man eating the contribution graph" src="https://raw.githubusercontent.com/krishna-1230/krishna-1230/output/pacman-contribution-graph-dark.svg"/>
+  </picture>
+</p>
+
+<p align="center"><b>🧱 BREAKOUT</b></p>
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/krishna-1230/krishna-1230/output/breakout-contribution-graph-dark.svg"/>
+    <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/krishna-1230/krishna-1230/output/breakout-contribution-graph.svg"/>
+    <img alt="breakout on the contribution graph" src="https://raw.githubusercontent.com/krishna-1230/krishna-1230/output/breakout-contribution-graph-dark.svg"/>
+  </picture>
+</p>
+
+<details>
+<summary><b>🕹️ Continue? 9... 8... 7... (two more games)</b></summary>
+<br/>
+
+<p align="center"><b>🚀 GALAGA</b></p>
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/krishna-1230/krishna-1230/output/galaga-contribution-graph-dark.svg"/>
+    <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/krishna-1230/krishna-1230/output/galaga-contribution-graph.svg"/>
+    <img alt="galaga on the contribution graph" src="https://raw.githubusercontent.com/krishna-1230/krishna-1230/output/galaga-contribution-graph-dark.svg"/>
+  </picture>
+</p>
+
+<p align="center"><b>🐍 SNAKE</b></p>
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/krishna-1230/krishna-1230/output/github-snake-dark.svg"/>
@@ -242,6 +271,41 @@ Custom dataset + **fine-tuned Llama** that acts as a first-line Linux tech-suppo
     <img alt="contribution snake" src="https://raw.githubusercontent.com/krishna-1230/krishna-1230/output/github-snake-dark.svg"/>
   </picture>
 </p>
+
+</details>
+
+<br/>
+
+## `$ ./tictactoe --vs-ai`
+
+<p align="center">
+  <b>This one is actually playable.</b> Click a square → GitHub opens an issue → hit <b>Create</b> →<br/>
+  a GitHub Action plays your move, my minimax AI answers, and this board updates in about a minute.
+</p>
+
+<!-- TTT:START -->
+<p align="center"><b>Game #1</b> · you are ❌, my AI is ⭕ · click any 🟦 to make a move</p>
+<table align="center">
+  <tr><td align="center"><a href="https://github.com/krishna-1230/krishna-1230/issues/new?title=ttt%7Cmove%7C1&body=Just%20press%20%2A%2ACreate%2A%2A%20%E2%80%94%20no%20need%20to%20change%20anything.%20The%20bot%20plays%20your%20move%20and%20answers%20in%20about%20a%20minute."><h1>🟦</h1></a></td><td align="center"><a href="https://github.com/krishna-1230/krishna-1230/issues/new?title=ttt%7Cmove%7C2&body=Just%20press%20%2A%2ACreate%2A%2A%20%E2%80%94%20no%20need%20to%20change%20anything.%20The%20bot%20plays%20your%20move%20and%20answers%20in%20about%20a%20minute."><h1>🟦</h1></a></td><td align="center"><a href="https://github.com/krishna-1230/krishna-1230/issues/new?title=ttt%7Cmove%7C3&body=Just%20press%20%2A%2ACreate%2A%2A%20%E2%80%94%20no%20need%20to%20change%20anything.%20The%20bot%20plays%20your%20move%20and%20answers%20in%20about%20a%20minute."><h1>🟦</h1></a></td></tr>
+  <tr><td align="center"><a href="https://github.com/krishna-1230/krishna-1230/issues/new?title=ttt%7Cmove%7C4&body=Just%20press%20%2A%2ACreate%2A%2A%20%E2%80%94%20no%20need%20to%20change%20anything.%20The%20bot%20plays%20your%20move%20and%20answers%20in%20about%20a%20minute."><h1>🟦</h1></a></td><td align="center"><a href="https://github.com/krishna-1230/krishna-1230/issues/new?title=ttt%7Cmove%7C5&body=Just%20press%20%2A%2ACreate%2A%2A%20%E2%80%94%20no%20need%20to%20change%20anything.%20The%20bot%20plays%20your%20move%20and%20answers%20in%20about%20a%20minute."><h1>🟦</h1></a></td><td align="center"><a href="https://github.com/krishna-1230/krishna-1230/issues/new?title=ttt%7Cmove%7C6&body=Just%20press%20%2A%2ACreate%2A%2A%20%E2%80%94%20no%20need%20to%20change%20anything.%20The%20bot%20plays%20your%20move%20and%20answers%20in%20about%20a%20minute."><h1>🟦</h1></a></td></tr>
+  <tr><td align="center"><a href="https://github.com/krishna-1230/krishna-1230/issues/new?title=ttt%7Cmove%7C7&body=Just%20press%20%2A%2ACreate%2A%2A%20%E2%80%94%20no%20need%20to%20change%20anything.%20The%20bot%20plays%20your%20move%20and%20answers%20in%20about%20a%20minute."><h1>🟦</h1></a></td><td align="center"><a href="https://github.com/krishna-1230/krishna-1230/issues/new?title=ttt%7Cmove%7C8&body=Just%20press%20%2A%2ACreate%2A%2A%20%E2%80%94%20no%20need%20to%20change%20anything.%20The%20bot%20plays%20your%20move%20and%20answers%20in%20about%20a%20minute."><h1>🟦</h1></a></td><td align="center"><a href="https://github.com/krishna-1230/krishna-1230/issues/new?title=ttt%7Cmove%7C9&body=Just%20press%20%2A%2ACreate%2A%2A%20%E2%80%94%20no%20need%20to%20change%20anything.%20The%20bot%20plays%20your%20move%20and%20answers%20in%20about%20a%20minute."><h1>🟦</h1></a></td></tr>
+</table>
+
+<p align="center">Humans <b>0</b> · AI <b>0</b> · Draws <b>0</b> · <a href="https://github.com/krishna-1230/krishna-1230/issues/new?title=ttt%7Cnew&body=Just%20press%20%2A%2ACreate%2A%2A%20%E2%80%94%20no%20need%20to%20change%20anything.%20The%20bot%20plays%20your%20move%20and%20answers%20in%20about%20a%20minute.">reset board</a></p>
+
+<details>
+<summary><b>🏅 Leaderboard & recent moves</b></summary>
+
+| 🏅 Beat the AI | Wins |
+|---|---|
+| *nobody yet, be the first* | – |
+
+| Recent moves | Player | Date |
+|---|---|---|
+| *no moves yet* | – | – |
+
+</details>
+<!-- TTT:END -->
 
 <br/>
 

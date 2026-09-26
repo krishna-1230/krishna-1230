@@ -1,0 +1,48 @@
+name: tic-tac-toe
+
+on:
+  issues:
+    types: [opened]
+
+# one move at a time so two players can't clobber the same board
+concurrency:
+  group: tictactoe
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  move:
+    if: startsWith(github.event.issue.title, 'ttt|')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Play move
+        env:
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+          PLAYER: ${{ github.event.issue.user.login }}
+        run: python3 scripts/tictactoe.py > "$RUNNER_TEMP/comment.md"
+
+      - name: Commit board
+        env:
+          PLAYER: ${{ github.event.issue.user.login }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add README.md game/state.json
+          if ! git diff --cached --quiet; then
+            git commit -m "ttt: move by @${PLAYER}"
+            git push
+          fi
+
+      - name: Reply and close issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          NUMBER: ${{ github.event.issue.number }}
+        run: |
+          gh issue comment "$NUMBER" --repo "$GITHUB_REPOSITORY" --body-file "$RUNNER_TEMP/comment.md"
+          gh issue close "$NUMBER" --repo "$GITHUB_REPOSITORY"
