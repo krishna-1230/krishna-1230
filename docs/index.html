@@ -1,0 +1,945 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Contribution Breakout</title>
+<meta name="description" content="Breakout where the bricks are a real GitHub contribution graph. Play with Krishna's graph or your own.">
+<meta property="og:title" content="Contribution Breakout">
+<meta property="og:description" content="Smash a real GitHub contribution graph. Bring your own username.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><rect x='1' y='1' width='6' height='6' rx='1' fill='%2339d353'/><rect x='9' y='1' width='6' height='6' rx='1' fill='%23006d32'/><rect x='1' y='9' width='6' height='6' rx='1' fill='%2326a641'/><circle cx='12' cy='12' r='3' fill='%2324c6dc'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d1117;
+    --panel: #161b22;
+    --line: #30363d;
+    --text: #e6edf3;
+    --muted: #8b949e;
+    --cyan: #24c6dc;
+    --green: #39d353;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    min-height: 100vh;
+    background: radial-gradient(ellipse 120% 60% at 50% 0%, #1b1f45 0%, var(--bg) 65%) var(--bg);
+    color: var(--text);
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+  }
+  main {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 24px 16px 48px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+  }
+  h1 {
+    margin: 4px 0 0;
+    font-family: 'Press Start 2P', monospace;
+    font-size: clamp(14px, 3.4vw, 26px);
+    letter-spacing: 2px;
+    text-align: center;
+    color: var(--cyan);
+    text-shadow: 0 0 14px rgba(36, 198, 220, .55);
+  }
+  .sub { margin: 0; color: var(--muted); font-size: 13px; text-align: center; }
+  .frame {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: var(--panel);
+    box-shadow: 0 0 0 1px rgba(36, 198, 220, .08), 0 24px 70px rgba(0, 0, 0, .55), 0 0 60px rgba(36, 198, 220, .08);
+  }
+  canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 3 / 2;
+    border-radius: 9px;
+    background: var(--bg);
+    touch-action: none;
+    cursor: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 8px 16px;
+    color: var(--muted);
+    font-size: 12px;
+  }
+  kbd {
+    padding: 2px 6px;
+    border: 1px solid var(--line);
+    border-bottom-width: 2px;
+    border-radius: 5px;
+    background: var(--panel);
+    color: var(--text);
+    font: inherit;
+  }
+  form { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+  input {
+    width: 210px;
+    padding: 9px 12px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--bg);
+    color: var(--text);
+    font: inherit;
+    font-size: 13px;
+  }
+  input:focus { outline: 2px solid var(--cyan); outline-offset: 1px; }
+  button, .btn {
+    padding: 9px 14px;
+    border: 1px solid var(--cyan);
+    border-radius: 8px;
+    background: rgba(36, 198, 220, .12);
+    color: var(--cyan);
+    font: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  button:hover, .btn:hover { background: rgba(36, 198, 220, .22); }
+  a { color: var(--cyan); }
+  .hint { display: none; margin: 0; color: var(--muted); font-size: 12px; }
+  @media (max-width: 640px) and (orientation: portrait) { .hint { display: block; } }
+  footer { color: var(--muted); font-size: 11px; text-align: center; line-height: 1.8; }
+</style>
+</head>
+<body>
+<main>
+  <h1>CONTRIBUTION BREAKOUT</h1>
+  <p class="sub" id="sub">loading contribution graph…</p>
+
+  <div class="frame">
+    <canvas id="game" width="960" height="640" aria-label="Breakout game played on a GitHub contribution graph"></canvas>
+  </div>
+
+  <p class="hint">📱 tip: rotate your phone for a bigger board</p>
+
+  <div class="row">
+    <span>move <kbd>mouse</kbd> <kbd>touch</kbd> <kbd>←</kbd><kbd>→</kbd></span>
+    <span>launch <kbd>click</kbd> <kbd>space</kbd></span>
+    <span>pause <kbd>P</kbd></span>
+    <span>sound <kbd>M</kbd></span>
+  </div>
+
+  <form id="userForm" autocomplete="off">
+    <input id="userInput" name="user" placeholder="your-github-username" aria-label="GitHub username" maxlength="39" spellcheck="false">
+    <button type="submit">▶ play MY graph</button>
+    <a class="btn" href="https://github.com/krishna-1230">← back to profile</a>
+  </form>
+
+  <footer>
+    power-ups: <b style="color:#24c6dc">W</b> wide paddle · <b style="color:#f778ba">M</b> multi-ball · <b style="color:#e3b341">S</b> slow-mo · <b style="color:#ff7b72">+</b> extra life<br>
+    built by <a href="https://github.com/krishna-1230">@krishna-1230</a> · contribution data via <a href="https://github.com/grubersjoe/github-contributions-api">github-contributions-api</a>
+  </footer>
+</main>
+
+<script>
+(() => {
+  'use strict';
+
+  const W = 960, H = 640, HUD = 58;
+  const canvas = document.getElementById('game');
+  const ctx = canvas.getContext('2d');
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  canvas.width = W * dpr;
+  canvas.height = H * dpr;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+  const GREENS = ['#161b22', '#0e4429', '#006d32', '#26a641', '#39d353'];
+  const GHOST = '#262c36';  // empty days: one-hit filler bricks
+  const CYAN = '#24c6dc';
+  const PIXEL = '"Press Start 2P", monospace';
+  const MONO = '"JetBrains Mono", ui-monospace, monospace';
+  const DEFAULT_USER = 'krishna-1230';
+  const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+  const params = new URLSearchParams(location.search);
+  const USER = (params.get('user') || DEFAULT_USER).replace(/[^A-Za-z0-9-]/g, '').slice(0, 39) || DEFAULT_USER;
+
+  // 5x7 pixel font for the text levels
+  const FONT = {
+    A: ['.###.', '#...#', '#...#', '#####', '#...#', '#...#', '#...#'],
+    E: ['#####', '#....', '#....', '####.', '#....', '#....', '#####'],
+    G: ['.###.', '#...#', '#....', '#.###', '#...#', '#...#', '.###.'],
+    H: ['#...#', '#...#', '#...#', '#####', '#...#', '#...#', '#...#'],
+    I: ['.###.', '..#..', '..#..', '..#..', '..#..', '..#..', '.###.'],
+    K: ['#...#', '#..#.', '#.#..', '##...', '#.#..', '#..#.', '#...#'],
+    N: ['#...#', '##..#', '#.#.#', '#..##', '#...#', '#...#', '#...#'],
+    R: ['####.', '#...#', '#...#', '####.', '#.#..', '#..#.', '#...#'],
+    S: ['.####', '#....', '#....', '.###.', '....#', '....#', '####.'],
+    T: ['#####', '..#..', '..#..', '..#..', '..#..', '..#..', '..#..'],
+  };
+
+  const DROPS = {
+    wide:  { label: 'W', color: '#24c6dc', name: 'WIDE PADDLE', weight: 35 },
+    multi: { label: 'M', color: '#f778ba', name: 'MULTI-BALL', weight: 30 },
+    slow:  { label: 'S', color: '#e3b341', name: 'SLOW-MO', weight: 25 },
+    life:  { label: '+', color: '#ff7b72', name: 'EXTRA LIFE', weight: 10 },
+  };
+
+  const store = {
+    get(k) { try { return localStorage.getItem(k); } catch { return null; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch {} },
+  };
+
+  const G = {
+    state: 'loading',     // loading | title | serve | play | paused | clear | over
+    pausedFrom: null,
+    level: 1,
+    score: 0,
+    best: +store.get('cb-best') || 0,
+    lives: 3,
+    combo: 0,
+    boost: 0,
+    days: [],
+    total: 0,
+    live: true,
+    cols: 53,
+    cell: 15,
+    ox: 0,
+    oy: HUD + 46,
+    grid: [],
+    bricks: [],
+    remaining: 0,
+    months: [],
+    balls: [],
+    drops: [],
+    parts: [],
+    texts: [],
+    shake: 0,
+    timers: { wide: 0, slow: 0 },
+    msg: 0,
+    muted: store.get('cb-muted') === '1',
+    t: 0,
+  };
+
+  const paddle = { x: W / 2, y: H - 46, w: 120, h: 10, target: W / 2 };
+  const keys = { left: false, right: false };
+
+  // ─── sound ────────────────────────────────────────────────────────────
+  let actx = null;
+  function beep(freq, dur = 0.06, type = 'square', vol = 0.035) {
+    if (G.muted) return;
+    try {
+      actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+      const o = actx.createOscillator();
+      const g = actx.createGain();
+      o.type = type;
+      o.frequency.value = freq;
+      g.gain.setValueAtTime(vol, actx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.0001, actx.currentTime + dur);
+      o.connect(g).connect(actx.destination);
+      o.start();
+      o.stop(actx.currentTime + dur);
+    } catch {}
+  }
+  function jingle(notes, step = 0.09) {
+    notes.forEach((f, i) => setTimeout(() => beep(f, step * 1.4, 'square', 0.04), i * step * 1000));
+  }
+
+  // ─── data ─────────────────────────────────────────────────────────────
+  async function loadGraph() {
+    try {
+      const res = await fetch(`https://github-contributions-api.jogruber.de/v4/${encodeURIComponent(USER)}?y=last`);
+      if (!res.ok) throw new Error(res.status);
+      const data = await res.json();
+      if (!Array.isArray(data.contributions) || !data.contributions.length) throw new Error('empty');
+      G.days = data.contributions;
+      G.total = data.total && data.total.lastYear || 0;
+    } catch {
+      G.live = false;
+      G.days = fakeYear();
+      G.total = G.days.reduce((s, d) => s + d.count, 0);
+    }
+  }
+
+  function fakeYear() {
+    const days = [];
+    const start = new Date();
+    start.setDate(start.getDate() - 370);
+    start.setDate(start.getDate() - start.getDay());
+    for (let i = 0; i < 371; i++) {
+      const d = new Date(start);
+      d.setDate(start.getDate() + i);
+      const level = Math.random() < 0.35 ? 1 + Math.floor(Math.random() * 4) : 0;
+      days.push({ date: d.toISOString().slice(0, 10), count: level * 2, level });
+    }
+    return days;
+  }
+
+  // ─── levels ───────────────────────────────────────────────────────────
+  function layout(cols) {
+    G.cols = cols;
+    G.cell = Math.min(17, Math.floor((W - 110) / cols));
+    G.ox = Math.round((W - cols * G.cell) / 2) + 14;
+    G.oy = HUD + 46;
+    G.grid = Array.from({ length: 7 }, () => new Array(cols).fill(null));
+    G.bricks = [];
+    G.months = [];
+  }
+
+  function addBrick(c, r, hits, ghost = false) {
+    if (c < 0 || c >= G.cols || hits <= 0) return;
+    const pad = G.cell >= 14 ? 3 : 2;
+    const b = {
+      c, r, hits, max: hits, flash: 0, ghost,
+      x: G.ox + c * G.cell + pad / 2,
+      y: G.oy + r * G.cell + pad / 2,
+      s: G.cell - pad,
+    };
+    G.grid[r][c] = b;
+    G.bricks.push(b);
+  }
+
+  function textLevel(word, hitsFor) {
+    layout(53);
+    const width = word.length * 6 - 1;
+    const start = Math.floor((G.cols - width) / 2);
+    [...word].forEach((ch, i) => {
+      const glyph = FONT[ch];
+      for (let r = 0; r < 7; r++) {
+        for (let x = 0; x < 5; x++) {
+          if (glyph[r][x] === '#') addBrick(start + i * 6 + x, r, hitsFor(r, x + i * 6));
+        }
+      }
+    });
+  }
+
+  function buildLevel(n) {
+    if (n === 1) {
+      const offset = new Date(G.days[0].date + 'T00:00:00').getDay();
+      layout(Math.ceil((G.days.length + offset) / 7));
+      let lastMonth = -1;
+      G.days.forEach((d, i) => {
+        const idx = i + offset;
+        const c = Math.floor(idx / 7), r = idx % 7;
+        const m = +d.date.slice(5, 7) - 1;
+        if (r === 0 || i === 0) {
+          if (m !== lastMonth && c < G.cols - 2) G.months.push({ c, label: MONTHS[m] });
+          lastMonth = m;
+        }
+        addBrick(c, r, d.level);
+      });
+      // a nearly empty graph is no fun: sprinkle in some extra bricks
+      if (G.bricks.length < 25) {
+        for (let k = 0; k < 60; k++) {
+          const c = Math.floor(Math.random() * G.cols), r = Math.floor(Math.random() * 7);
+          if (!G.grid[r][c]) addBrick(c, r, 1 + Math.floor(Math.random() * 2));
+        }
+      }
+    } else if (n === 2) {
+      textLevel('KRISHNA', r => (r < 2 ? 3 : r < 5 ? 2 : 1));
+    } else if (n === 3) {
+      textLevel('AGENTS', (r, x) => ((r + x) % 3 === 0 ? 4 : 2));
+    } else {
+      layout(53);
+      const fill = Math.min(0.5 + n * 0.04, 0.8);
+      for (let c = 0; c < G.cols; c++) {
+        for (let r = 0; r < 7; r++) {
+          if (Math.random() < fill) addBrick(c, r, 1 + Math.floor(Math.random() * Math.min(4, n - 1)));
+        }
+      }
+    }
+    // every empty day becomes a ghost brick the ball smashes straight through;
+    // only the green ones bounce the ball and count toward clearing
+    for (let c = 0; c < G.cols; c++) {
+      for (let r = 0; r < 7; r++) {
+        if (!G.grid[r][c]) addBrick(c, r, 1, true);
+      }
+    }
+    G.remaining = G.bricks.filter(k => !k.ghost).length;
+  }
+
+  function levelName() {
+    if (G.level === 1) return USER === DEFAULT_USER ? 'MY LAST 12 MONTHS' : `@${USER.toUpperCase()}'S YEAR`;
+    if (G.level === 2) return "HI, I'M KRISHNA";
+    if (G.level === 3) return 'MULTI-AGENT MODE';
+    return 'THE GRIND';
+  }
+
+  // ─── game flow ────────────────────────────────────────────────────────
+  function startGame() {
+    G.level = 1;
+    G.score = 0;
+    G.lives = 3;
+    G.boost = 0;
+    G.combo = 0;
+    buildLevel(1);
+    serve();
+    jingle([523, 659, 784, 1047], 0.07);
+  }
+
+  function serve() {
+    G.balls = [{ x: paddle.x, y: paddle.y - 6, vx: 0, vy: 0, r: 5.5, stuck: true, trail: [] }];
+    G.drops = [];
+    G.timers.wide = 0;
+    G.timers.slow = 0;
+    G.combo = 0;
+    G.state = 'serve';
+  }
+
+  function launch() {
+    const sp = targetSpeed();
+    G.balls.forEach(b => {
+      if (!b.stuck) return;
+      const a = (Math.random() - 0.5) * 0.7;
+      b.vx = sp * Math.sin(a);
+      b.vy = -sp * Math.cos(a);
+      b.stuck = false;
+    });
+    G.state = 'play';
+    beep(660, 0.05);
+  }
+
+  function targetSpeed() {
+    const base = Math.min(420 + (G.level - 1) * 40, 640) + G.boost;
+    return base * (G.timers.slow > 0 ? 0.62 : 1);
+  }
+
+  function loseLife() {
+    G.lives--;
+    G.shake = 10;
+    jingle([392, 330, 262], 0.1);
+    if (G.lives <= 0) {
+      G.state = 'over';
+      if (G.score > G.best) {
+        G.best = G.score;
+        store.set('cb-best', String(G.best));
+      }
+    } else {
+      serve();
+    }
+  }
+
+  function nextLevel() {
+    G.level++;
+    G.boost = 0;
+    buildLevel(G.level);
+    serve();
+  }
+
+  function action() {
+    if (G.state === 'title' || G.state === 'over') startGame();
+    else if (G.state === 'serve') launch();
+    else if (G.state === 'paused') G.state = G.pausedFrom;
+  }
+
+  function togglePause() {
+    if (G.state === 'play' || G.state === 'serve') {
+      G.pausedFrom = G.state;
+      G.state = 'paused';
+    } else if (G.state === 'paused') {
+      G.state = G.pausedFrom;
+    }
+  }
+
+  // ─── physics ──────────────────────────────────────────────────────────
+  function brickAt(b) {
+    const c0 = Math.floor((b.x - b.r - G.ox) / G.cell), c1 = Math.floor((b.x + b.r - G.ox) / G.cell);
+    const r0 = Math.floor((b.y - b.r - G.oy) / G.cell), r1 = Math.floor((b.y + b.r - G.oy) / G.cell);
+    for (let r = Math.max(0, r0); r <= Math.min(6, r1); r++) {
+      for (let c = Math.max(0, c0); c <= Math.min(G.cols - 1, c1); c++) {
+        const k = G.grid[r][c];
+        if (k && k.hits > 0 &&
+            b.x + b.r > k.x && b.x - b.r < k.x + k.s &&
+            b.y + b.r > k.y && b.y - b.r < k.y + k.s) return k;
+      }
+    }
+    return null;
+  }
+
+  function hitBrick(k) {
+    k.hits--;
+    k.flash = 0.12;
+    if (k.ghost) {
+      G.combo++;
+      G.score += 2 * G.level * Math.min(G.combo, 20);
+      beep(160 + Math.min(G.combo, 20) * 15, 0.03, 'triangle');
+      burst(k.x + k.s / 2, k.y + k.s / 2, '#3d444d', 4);
+      if (Math.random() < 0.03) dropPowerUp(k.x + k.s / 2, k.y + k.s / 2);
+      return;
+    }
+    G.boost = Math.min(G.boost + 1.5, 110);
+    if (k.hits > 0) {
+      G.score += 5;
+      beep(280 + k.hits * 40, 0.04);
+      return;
+    }
+    G.remaining--;
+    G.combo++;
+    const pts = 10 * k.max * G.level * G.combo;
+    G.score += pts;
+    G.shake = Math.min(G.shake + 3, 8);
+    beep(420 + Math.min(G.combo, 12) * 45, 0.07);
+    burst(k.x + k.s / 2, k.y + k.s / 2, GREENS[k.max], 10);
+    G.texts.push({ x: k.x + k.s / 2, y: k.y, text: G.combo > 1 ? `+${pts} x${G.combo}` : `+${pts}`, life: 0.9 });
+    if (Math.random() < 0.13) dropPowerUp(k.x + k.s / 2, k.y + k.s / 2);
+    if (G.remaining <= 0) {
+      G.state = 'clear';
+      G.msg = 2.2;
+      G.score += 500 * G.level;
+      jingle([523, 659, 784, 1047, 784, 1047], 0.08);
+    }
+  }
+
+  function dropPowerUp(x, y) {
+    const total = Object.values(DROPS).reduce((s, d) => s + d.weight, 0);
+    let roll = Math.random() * total;
+    for (const [type, d] of Object.entries(DROPS)) {
+      roll -= d.weight;
+      if (roll <= 0) {
+        G.drops.push({ x, y, type, vy: 150 });
+        return;
+      }
+    }
+  }
+
+  function applyPowerUp(type) {
+    const d = DROPS[type];
+    if (type === 'wide') G.timers.wide = 12;
+    if (type === 'slow') G.timers.slow = 9;
+    if (type === 'life') G.lives = Math.min(G.lives + 1, 6);
+    if (type === 'multi') {
+      const extra = [];
+      G.balls.filter(b => !b.stuck).slice(0, 3).forEach(b => {
+        [-0.35, 0.35].forEach(a => {
+          const cos = Math.cos(a), sin = Math.sin(a);
+          extra.push({ x: b.x, y: b.y, r: b.r, stuck: false, trail: [], vx: b.vx * cos - b.vy * sin, vy: b.vx * sin + b.vy * cos });
+        });
+      });
+      G.balls.push(...extra.slice(0, 8 - G.balls.length));
+    }
+    G.texts.push({ x: paddle.x, y: paddle.y - 24, text: d.name, life: 1.2, color: d.color });
+    jingle([784, 988, 1175], 0.06);
+  }
+
+  function burst(x, y, color, n) {
+    for (let i = 0; i < n; i++) {
+      const a = Math.random() * Math.PI * 2, s = 60 + Math.random() * 220;
+      G.parts.push({ x, y, vx: Math.cos(a) * s, vy: Math.sin(a) * s - 60, life: 0.5 + Math.random() * 0.4, color, size: 2 + Math.random() * 3 });
+    }
+  }
+
+  function stepBall(b, dt) {
+    // keep a constant speed so boosts and slow-mo apply immediately
+    const sp = Math.hypot(b.vx, b.vy) || 1, want = targetSpeed();
+    b.vx *= want / sp;
+    b.vy *= want / sp;
+
+    const steps = Math.max(1, Math.ceil(want * dt / 3));
+    const h = dt / steps;
+    for (let i = 0; i < steps; i++) {
+      b.x += b.vx * h;
+      if (b.x < b.r) { b.x = b.r; b.vx = Math.abs(b.vx); beep(200, 0.03); }
+      else if (b.x > W - b.r) { b.x = W - b.r; b.vx = -Math.abs(b.vx); beep(200, 0.03); }
+      let k = brickAt(b);
+      if (k && k.ghost) hitBrick(k);  // empty days get plowed through
+      else if (k) { b.x -= b.vx * h; b.vx = -b.vx; hitBrick(k); }
+
+      b.y += b.vy * h;
+      if (b.y < HUD + b.r) { b.y = HUD + b.r; b.vy = Math.abs(b.vy); beep(200, 0.03); }
+      k = brickAt(b);
+      if (k && k.ghost) hitBrick(k);
+      else if (k) { b.y -= b.vy * h; b.vy = -b.vy; hitBrick(k); }
+
+      const half = paddle.w / 2;
+      if (b.vy > 0 && b.y + b.r >= paddle.y && b.y - b.r <= paddle.y + paddle.h &&
+          b.x >= paddle.x - half - b.r && b.x <= paddle.x + half + b.r) {
+        const rel = Math.max(-1, Math.min(1, (b.x - paddle.x) / half));
+        const a = rel * (Math.PI / 3);
+        b.vx = want * Math.sin(a);
+        b.vy = -want * Math.cos(a);
+        b.y = paddle.y - b.r;
+        G.combo = 0;
+        beep(330, 0.04);
+      }
+      if (b.y - b.r > H) { b.dead = true; break; }
+      if (G.state !== 'play') break;
+    }
+    b.trail.push({ x: b.x, y: b.y });
+    if (b.trail.length > 8) b.trail.shift();
+  }
+
+  // ─── update ───────────────────────────────────────────────────────────
+  function update(dt) {
+    G.t += dt;
+
+    if (G.state === 'play' || G.state === 'serve') {
+      if (keys.left) paddle.target -= 760 * dt;
+      if (keys.right) paddle.target += 760 * dt;
+      G.timers.wide = Math.max(0, G.timers.wide - dt);
+      G.timers.slow = Math.max(0, G.timers.slow - dt);
+    }
+    const wantW = G.timers.wide > 0 ? 190 : 120;
+    paddle.w += (wantW - paddle.w) * Math.min(1, dt * 10);
+    paddle.target = Math.max(paddle.w / 2, Math.min(W - paddle.w / 2, paddle.target));
+    if (G.state !== 'paused') paddle.x += (paddle.target - paddle.x) * Math.min(1, dt * 22);
+
+    if (G.state === 'serve') {
+      G.balls.forEach(b => { b.x = paddle.x; b.y = paddle.y - b.r - 1; b.trail = []; });
+    }
+
+    if (G.state === 'play') {
+      G.balls.forEach(b => stepBall(b, dt));
+      G.balls = G.balls.filter(b => !b.dead);
+      if (G.state === 'play' && !G.balls.length) loseLife();
+
+      G.drops.forEach(d => {
+        d.y += d.vy * dt;
+        if (d.y + 9 >= paddle.y && d.y - 9 <= paddle.y + paddle.h && Math.abs(d.x - paddle.x) < paddle.w / 2 + 9) {
+          d.caught = true;
+          applyPowerUp(d.type);
+        }
+      });
+      G.drops = G.drops.filter(d => !d.caught && d.y < H + 20);
+    }
+
+    if (G.state === 'clear') {
+      G.msg -= dt;
+      if (G.msg <= 0) nextLevel();
+    }
+
+    if (G.state !== 'paused') {
+      G.parts.forEach(p => { p.x += p.vx * dt; p.y += p.vy * dt; p.vy += 500 * dt; p.life -= dt; });
+      G.parts = G.parts.filter(p => p.life > 0);
+      G.texts.forEach(t => { t.y -= 40 * dt; t.life -= dt; });
+      G.texts = G.texts.filter(t => t.life > 0);
+      G.bricks.forEach(k => { k.flash = Math.max(0, k.flash - dt); });
+      G.shake = Math.max(0, G.shake - dt * 30);
+    }
+  }
+
+  // ─── draw ─────────────────────────────────────────────────────────────
+  function roundRect(x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r);
+    ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r);
+    ctx.arcTo(x, y, x + w, y, r);
+    ctx.closePath();
+  }
+
+  function drawHud() {
+    ctx.fillStyle = 'rgba(22,27,34,.9)';
+    ctx.fillRect(0, 0, W, HUD);
+    ctx.fillStyle = '#30363d';
+    ctx.fillRect(0, HUD - 1, W, 1);
+
+    ctx.textBaseline = 'middle';
+    ctx.font = `11px ${PIXEL}`;
+    ctx.textAlign = 'left';
+    ctx.fillStyle = '#8b949e';
+    ctx.fillText('SCORE', 20, 20);
+    ctx.fillText('BEST', 170, 20);
+    ctx.font = `15px ${PIXEL}`;
+    ctx.fillStyle = '#e6edf3';
+    ctx.fillText(String(G.score).padStart(6, '0'), 20, 40);
+    ctx.fillStyle = '#8b949e';
+    ctx.fillText(String(Math.max(G.best, G.score)).padStart(6, '0'), 170, 40);
+
+    ctx.textAlign = 'center';
+    ctx.font = `11px ${PIXEL}`;
+    ctx.fillStyle = CYAN;
+    ctx.fillText(`LEVEL ${G.level}`, W / 2, 20);
+    ctx.font = `12px ${MONO}`;
+    ctx.fillStyle = '#8b949e';
+    ctx.fillText(levelName(), W / 2, 40);
+
+    ctx.textAlign = 'right';
+    ctx.font = `11px ${PIXEL}`;
+    ctx.fillStyle = '#8b949e';
+    ctx.fillText(G.muted ? 'LIVES  [MUTED]' : 'LIVES', W - 20, 20);
+    for (let i = 0; i < G.lives; i++) {
+      ctx.fillStyle = GREENS[4];
+      roundRect(W - 32 - i * 18, 33, 12, 12, 2);
+      ctx.fill();
+    }
+
+    // active power-up timers
+    let tx = 20;
+    [['wide', G.timers.wide], ['slow', G.timers.slow]].forEach(([type, t]) => {
+      if (t <= 0) return;
+      const d = DROPS[type];
+      ctx.fillStyle = d.color;
+      ctx.globalAlpha = 0.9;
+      ctx.fillRect(tx, HUD + 6, 60 * (t / (type === 'wide' ? 12 : 9)), 3);
+      ctx.globalAlpha = 1;
+      tx += 70;
+    });
+  }
+
+  function drawGraph() {
+    const { ox, oy, cell, cols } = G;
+    const pad = cell >= 14 ? 3 : 2;
+
+    ctx.font = `11px ${MONO}`;
+    ctx.fillStyle = '#8b949e';
+    ctx.textBaseline = 'alphabetic';
+    ctx.textAlign = 'left';
+    G.months.forEach(m => ctx.fillText(m.label, ox + m.c * cell, oy - 8));
+    if (G.level === 1) {
+      ctx.textAlign = 'right';
+      ctx.textBaseline = 'middle';
+      [[1, 'Mon'], [3, 'Wed'], [5, 'Fri']].forEach(([r, t]) => ctx.fillText(t, ox - 6, oy + r * cell + cell / 2));
+    }
+
+    for (let c = 0; c < cols; c++) {
+      for (let r = 0; r < 7; r++) {
+        const k = G.grid[r][c];
+        const x = ox + c * cell + pad / 2, y = oy + r * cell + pad / 2, s = cell - pad;
+        if (k && k.hits > 0) {
+          ctx.fillStyle = k.flash > 0 ? '#ffffff' : k.ghost ? GHOST : GREENS[k.hits];
+          if (!k.ghost && (k.hits >= 3 || G.remaining <= 5)) {
+            // the last few stragglers pulse so they're easy to spot
+            ctx.shadowColor = G.remaining <= 5 ? CYAN : GREENS[4];
+            ctx.shadowBlur = G.remaining <= 5 ? 8 + Math.sin(G.t * 8) * 6 : 6;
+          }
+        } else {
+          ctx.fillStyle = '#161b22';
+        }
+        roundRect(x, y, s, s, 2);
+        ctx.fill();
+        ctx.shadowBlur = 0;
+        if (!k || k.hits <= 0) {
+          ctx.strokeStyle = 'rgba(240,246,252,.06)';
+          ctx.lineWidth = 1;
+          ctx.stroke();
+        }
+      }
+    }
+
+    if (G.level === 1) {
+      const lx = ox + cols * cell - 5 * 13 - 70, ly = oy + 7 * cell + 16;
+      ctx.textAlign = 'right';
+      ctx.textBaseline = 'middle';
+      ctx.fillStyle = '#8b949e';
+      ctx.fillText('Less', lx - 6, ly + 5);
+      GREENS.forEach((g, i) => { ctx.fillStyle = g; roundRect(lx + i * 13, ly, 10, 10, 2); ctx.fill(); });
+      ctx.textAlign = 'left';
+      ctx.fillStyle = '#8b949e';
+      ctx.fillText('More', lx + 5 * 13 + 4, ly + 5);
+      ctx.textAlign = 'left';
+      ctx.fillText(`${G.total} contributions in the last year${G.live ? '' : ' (demo data)'}`, ox, ly + 5);
+    }
+  }
+
+  function drawPlay() {
+    // paddle
+    const grad = ctx.createLinearGradient(paddle.x - paddle.w / 2, 0, paddle.x + paddle.w / 2, 0);
+    grad.addColorStop(0, '#302b63');
+    grad.addColorStop(0.5, CYAN);
+    grad.addColorStop(1, '#302b63');
+    ctx.fillStyle = grad;
+    ctx.shadowColor = CYAN;
+    ctx.shadowBlur = 14;
+    roundRect(paddle.x - paddle.w / 2, paddle.y, paddle.w, paddle.h, 5);
+    ctx.fill();
+    ctx.shadowBlur = 0;
+
+    // drops
+    G.drops.forEach(d => {
+      const p = DROPS[d.type];
+      ctx.fillStyle = p.color;
+      ctx.shadowColor = p.color;
+      ctx.shadowBlur = 10;
+      roundRect(d.x - 12, d.y - 8, 24, 16, 8);
+      ctx.fill();
+      ctx.shadowBlur = 0;
+      ctx.fillStyle = '#0d1117';
+      ctx.font = `9px ${PIXEL}`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(p.label, d.x, d.y + 1);
+    });
+
+    // balls
+    G.balls.forEach(b => {
+      b.trail.forEach((p, i) => {
+        ctx.globalAlpha = (i + 1) / b.trail.length * 0.25;
+        ctx.fillStyle = CYAN;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, b.r * (i + 1) / b.trail.length, 0, Math.PI * 2);
+        ctx.fill();
+      });
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = '#ffffff';
+      ctx.shadowColor = CYAN;
+      ctx.shadowBlur = 12;
+      ctx.beginPath();
+      ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.shadowBlur = 0;
+    });
+
+    // particles + floating text
+    G.parts.forEach(p => {
+      ctx.globalAlpha = Math.max(0, Math.min(1, p.life * 2));
+      ctx.fillStyle = p.color;
+      ctx.fillRect(p.x, p.y, p.size, p.size);
+    });
+    ctx.globalAlpha = 1;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    G.texts.forEach(t => {
+      ctx.globalAlpha = Math.max(0, Math.min(1, t.life * 1.5));
+      ctx.font = `10px ${PIXEL}`;
+      ctx.fillStyle = t.color || '#e6edf3';
+      ctx.fillText(t.text, t.x, t.y);
+    });
+    ctx.globalAlpha = 1;
+  }
+
+  function overlay(lines) {
+    ctx.fillStyle = 'rgba(13,17,23,.72)';
+    ctx.fillRect(0, HUD, W, H - HUD);
+    const boxW = 560, boxH = 60 + lines.length * 34, bx = (W - boxW) / 2, by = 300 - boxH / 2 + 60;
+    ctx.fillStyle = 'rgba(22,27,34,.95)';
+    ctx.strokeStyle = 'rgba(36,198,220,.5)';
+    ctx.lineWidth = 1.5;
+    roundRect(bx, by, boxW, boxH, 12);
+    ctx.fill();
+    ctx.stroke();
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    lines.forEach((l, i) => {
+      ctx.font = l.big ? `20px ${PIXEL}` : l.pixel ? `11px ${PIXEL}` : `14px ${MONO}`;
+      ctx.fillStyle = l.color || '#e6edf3';
+      if (l.blink && Math.floor(G.t * 2) % 2) return;
+      ctx.fillText(l.text, W / 2, by + 44 + i * 34);
+    });
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = '#0d1117';
+    ctx.fillRect(0, 0, W, H);
+
+    // subtle scanlines
+    ctx.fillStyle = 'rgba(255,255,255,.012)';
+    for (let y = HUD; y < H; y += 4) ctx.fillRect(0, y, W, 1);
+
+    ctx.save();
+    if (G.shake > 0) ctx.translate((Math.random() - 0.5) * G.shake, (Math.random() - 0.5) * G.shake);
+    if (G.state !== 'loading') {
+      drawGraph();
+      drawPlay();
+    }
+    ctx.restore();
+    drawHud();
+
+    const who = USER === DEFAULT_USER ? "KRISHNA'S" : `@${USER}'S`;
+    if (G.state === 'loading') {
+      overlay([{ text: 'LOADING GRAPH...', pixel: true, color: CYAN, blink: true }]);
+    } else if (G.state === 'title') {
+      overlay([
+        { text: 'CONTRIBUTION', big: true, color: CYAN },
+        { text: 'BREAKOUT', big: true, color: GREENS[4] },
+        { text: `every square is a real day of ${who.toLowerCase()} GitHub year` },
+        { text: 'plow through empty days, smash every green one', color: '#8b949e' },
+        { text: 'CLICK · TAP · SPACE TO START', pixel: true, color: CYAN, blink: true },
+      ]);
+    } else if (G.state === 'serve') {
+      ctx.textAlign = 'center';
+      ctx.font = `10px ${PIXEL}`;
+      ctx.fillStyle = Math.floor(G.t * 2) % 2 ? '#8b949e' : CYAN;
+      ctx.fillText('CLICK / SPACE TO LAUNCH', W / 2, paddle.y + 30);
+    } else if (G.state === 'paused') {
+      overlay([{ text: 'PAUSED', big: true, color: CYAN }, { text: 'press P or click to resume' }]);
+    } else if (G.state === 'clear') {
+      overlay([
+        { text: `LEVEL ${G.level} CLEAR!`, big: true, color: GREENS[4] },
+        { text: `+${500 * G.level} bonus` },
+        { text: `next up: level ${G.level + 1}`, pixel: true, color: CYAN },
+      ]);
+    } else if (G.state === 'over') {
+      const record = G.score >= G.best && G.score > 0;
+      overlay([
+        { text: 'GAME OVER', big: true, color: '#ff7b72' },
+        { text: `score ${G.score} · level ${G.level}${record ? ' · NEW BEST!' : ''}`, color: record ? GREENS[4] : '#e6edf3' },
+        { text: 'CLICK · TAP · SPACE TO RETRY', pixel: true, color: CYAN, blink: true },
+      ]);
+    }
+  }
+
+  // ─── loop ─────────────────────────────────────────────────────────────
+  let last = performance.now();
+  function frame(now) {
+    const dt = Math.min((now - last) / 1000, 1 / 30);
+    last = now;
+    update(dt);
+    draw();
+    requestAnimationFrame(frame);
+  }
+
+  // ─── input ────────────────────────────────────────────────────────────
+  function pointerX(e) {
+    const rect = canvas.getBoundingClientRect();
+    return (e.clientX - rect.left) * (W / rect.width);
+  }
+  canvas.addEventListener('pointermove', e => { paddle.target = pointerX(e); });
+  canvas.addEventListener('pointerdown', e => {
+    e.preventDefault();
+    paddle.target = pointerX(e);
+    if (G.state === 'paused') G.state = G.pausedFrom;
+    else action();
+  });
+
+  window.addEventListener('keydown', e => {
+    if (e.target instanceof HTMLInputElement) return;
+    const k = e.key.toLowerCase();
+    if (k === 'arrowleft' || k === 'a') { keys.left = true; e.preventDefault(); }
+    else if (k === 'arrowright' || k === 'd') { keys.right = true; e.preventDefault(); }
+    else if (k === ' ' || k === 'enter') { e.preventDefault(); action(); }
+    else if (k === 'p' || k === 'escape') togglePause();
+    else if (k === 'm') {
+      G.muted = !G.muted;
+      store.set('cb-muted', G.muted ? '1' : '0');
+    }
+  });
+  window.addEventListener('keyup', e => {
+    const k = e.key.toLowerCase();
+    if (k === 'arrowleft' || k === 'a') keys.left = false;
+    if (k === 'arrowright' || k === 'd') keys.right = false;
+  });
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden && (G.state === 'play' || G.state === 'serve')) togglePause();
+  });
+
+  const form = document.getElementById('userForm');
+  const input = document.getElementById('userInput');
+  input.value = USER === DEFAULT_USER ? '' : USER;
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    const u = input.value.trim().replace(/^@/, '').replace(/[^A-Za-z0-9-]/g, '');
+    location.search = u ? `?user=${encodeURIComponent(u)}` : '';
+  });
+
+  // ─── boot ─────────────────────────────────────────────────────────────
+  requestAnimationFrame(frame);
+  Promise.all([loadGraph(), document.fonts ? document.fonts.ready : null]).then(() => {
+    buildLevel(1);
+    G.state = 'title';
+    const sub = document.getElementById('sub');
+    sub.textContent = G.live
+      ? `@${USER} · ${G.total} contributions in the last year · every green square is a brick`
+      : `couldn't load @${USER}'s graph, so here's a random one`;
+  });
+})();
+</script>
+</body>
+</html>

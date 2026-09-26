@@ -232,6 +232,28 @@ Custom dataset + **fine-tuned Llama** that acts as a first-line Linux tech-suppo
   └─────────────────────────────────────────────────────────────┘
 ```
 
+<p align="center">
+  <a href="https://krishna-1230.github.io/krishna-1230/"><img src="https://img.shields.io/badge/%E2%96%B6%20PLAY%20NOW-Contribution%20Breakout-39d353?style=for-the-badge&labelColor=0d1117" alt="Play Contribution Breakout"/></a>
+</p>
+<p align="center">
+  <sub>🧱 <b>Actually playable.</b> A real Breakout where the bricks are my contribution graph: mouse, keyboard or touch.<br/>
+  Plow through empty days, smash every green one, then try it with <b>your own</b> GitHub username.</sub>
+</p>
+
+<p align="center">
+  <a href="https://krishna-1230.github.io/krishna-1230/">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/krishna-1230/krishna-1230/output/breakout-contribution-graph-dark.svg"/>
+    <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/krishna-1230/krishna-1230/output/breakout-contribution-graph.svg"/>
+    <img alt="breakout on the contribution graph" src="https://raw.githubusercontent.com/krishna-1230/krishna-1230/output/breakout-contribution-graph-dark.svg"/>
+  </picture>
+  </a>
+</p>
+
+<details>
+<summary><b>🕹️ Continue? 9... 8... 7... (three more games, these ones just watch)</b></summary>
+<br/>
+
 <p align="center"><b>👾 PAC-MAN</b></p>
 <p align="center">
   <picture>
@@ -241,18 +263,6 @@ Custom dataset + **fine-tuned Llama** that acts as a first-line Linux tech-suppo
   </picture>
 </p>
 
-<p align="center"><b>🧱 BREAKOUT</b></p>
-<p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/krishna-1230/krishna-1230/output/breakout-contribution-graph-dark.svg"/>
-    <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/krishna-1230/krishna-1230/output/breakout-contribution-graph.svg"/>
-    <img alt="breakout on the contribution graph" src="https://raw.githubusercontent.com/krishna-1230/krishna-1230/output/breakout-contribution-graph-dark.svg"/>
-  </picture>
-</p>
-
-<details>
-<summary><b>🕹️ Continue? 9... 8... 7... (two more games)</b></summary>
-<br/>
 
 <p align="center"><b>🚀 GALAGA</b></p>
 <p align="center">
@@ -279,7 +289,7 @@ Custom dataset + **fine-tuned Llama** that acts as a first-line Linux tech-suppo
 ## `$ ./tictactoe --vs-ai`
 
 <p align="center">
-  <b>This one is actually playable.</b> Click a square → GitHub opens an issue → hit <b>Create</b> →<br/>
+  <b>Turn-based, played through GitHub issues.</b> Click a square → GitHub opens an issue → hit <b>Create</b> →<br/>
   a GitHub Action plays your move, my minimax AI answers, and this board updates in about a minute.
 </p>
 
