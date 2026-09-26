@@ -17,17 +17,18 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
+      # pacman first: snk runs in docker as root and would leave dist/ unwritable
+      - uses: abozanona/pacman-contribution-graph@main
+        with:
+          github_user_name: ${{ github.repository_owner }}
+          games: "pacman,breakout,galaga"
+
       - uses: Platane/snk@v3
         with:
           github_user_name: ${{ github.repository_owner }}
           outputs: |
             dist/github-snake.svg
             dist/github-snake-dark.svg?palette=github-dark&color_snake=#24c6dc&color_dots=#161b22,#0e4d5c,#127c8f,#1aa3b8,#24c6dc
-
-      - uses: abozanona/pacman-contribution-graph@main
-        with:
-          github_user_name: ${{ github.repository_owner }}
-          games: "pacman,breakout,galaga"
 
       - uses: crazy-max/ghaction-github-pages@v4
         with:
